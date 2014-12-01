@@ -1,4 +1,4 @@
-﻿	var LABEL_WHEN = "일시";
+    var LABEL_WHEN = "일시";
     var LABEL_WHERE = "식당";
     var LABEL_WHAT = "메뉴";
     var LABEL_WHO_GROUP = "그룹";

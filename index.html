@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
+    <!--https://elga-c9-gom105mari.c9.io/-->
     <head>
-        <title>Show me the Money</title> 
+        <title>Show me the Money</title>
         <link rel="stylesheet" type="text/css" href="css/styleElga.css">
         <script src="js/gapiElga.js" charset="utf-8"></script>
         <script src="js/contentElga.js" charset="utf-8"></script>
@@ -148,7 +149,7 @@
                     return string;
                 }
 
-            }       
+            }
         </script>
         <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
     </head>
@@ -156,17 +157,24 @@
         <div id="nav">
             <input type="button" onclick="showListDiv()" value="List">
             <input type="button" onclick="showNewDiv()" value="New">
+            <div class="profile-dialog" style="display: block; top: 24px; left: 845px;">
+                <div class="profile-arrow" style="margin-left: 300px;"></div>
+                <div class="profile-content">
+                <div id="add-text"></div>
+                    <input class="user-input" type="text" name="input" id="new-element" placeholder="" onkeypress="closePlugBox()"><span class="glyphicon glyphicon-ok">&nbsp;</span>
+                    <!--<button class="btn btn-large btn-success btn-block submit" ><span class="glyphicon glyphicon-ok">&nbsp;</span>OK</button>-->
+        </div>
+    </div>
         </div>
         <div id="div_list" style="display:none;"></div>
         <div id="div_new" style="display:none;">
             <div id="div_when"></div>
             <div id="div_where"></div>
             <div id="div_what" class="what"></div>
-
             <div id="div_whog" class="whog"></div>
             <div id="div_whom" class="whom"></div>
-            <div id="result"></div>
+            <div id="div_result"></div>
             <div id="div_buttons"></div>
         </div>
     </body>
-</html> 
+</html>

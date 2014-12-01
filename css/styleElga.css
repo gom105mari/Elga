@@ -75,27 +75,27 @@ footer p {
 }
 
 .style_when {
-    background-color: #FF80C0; 
+    background-color: #FF80C0;
     border-color: #FF80C0;
     border-style: solid;
     border-radius: 2pt;
     border-width: 2pt;
     font-size: 10pt;
     color: #ffffff;
-    font-weight: bolder;    
+    font-weight: bolder;
     margin: 5pt;
     padding: 2pt 7pt 2pt 7pt;
 }
 
 .style_where {
-    background-color: #8080ff; 
+    background-color: #8080ff;
     border-color: #8080ff;
     border-style: solid;
     border-radius: 2pt;
     border-width: 2pt;
     font-size: 10pt;
     color: #ffffff;
-    font-weight: bolder;    
+    font-weight: bolder;
     margin: 5pt;
     padding: 2pt 7pt 2pt 7pt;
 }
@@ -104,11 +104,11 @@ footer p {
     background-color: #FF0080;
     border-color: #FF0080;
     border-style: solid;
-    border-radius: 2pt; 
+    border-radius: 2pt;
     border-width: 2pt;
     font-size: 10pt;
-    color: #ffffff;  
-    font-weight: bolder;    
+    color: #ffffff;
+    font-weight: bolder;
     margin: 5pt;
     padding: 2pt 7pt 2pt 7pt;
 }
@@ -117,11 +117,11 @@ footer p {
     background-color: #FF8040;
     border-color: #FF8040;
     border-style: solid;
-    border-radius: 2pt; 
+    border-radius: 2pt;
     border-width: 2pt;
     font-size: 10pt;
-    color: #ffffff;  
-    font-weight: bolder;    
+    color: #ffffff;
+    font-weight: bolder;
     margin: 5pt;
     padding: 2pt 7pt 2pt 7pt;
 }
@@ -130,11 +130,24 @@ footer p {
     background-color: #008080;
     border-color: #008080;
     border-style: solid;
-    border-radius: 2pt; 
+    border-radius: 2pt;
     border-width: 2pt;
     font-size: 10pt;
-    color: #ffffff;  
-    font-weight: bolder;    
+    color: #ffffff;
+    font-weight: bolder;
+    margin: 5pt;
+    padding: 2pt 7pt 2pt 7pt;
+}
+
+.style_result {
+    background-color: #008080;
+    border-color: #008080;
+    border-style: solid;
+    border-radius: 2pt;
+    border-width: 2pt;
+    font-size: 10pt;
+    color: #ffffff;
+    font-weight: bolder;
     margin: 5pt;
     padding: 2pt 7pt 2pt 7pt;
 }
@@ -157,4 +170,18 @@ footer p {
 
 #div_whom {
     padding: 5pt;
+}
+
+#div_result {
+    padding: 5pt;
+}
+
+.style {
+display: block;
+top: 24px;
+left: 845px;
+}
+.profile-dialog {
+position: absolute;
+z-index: 1000;
 }
