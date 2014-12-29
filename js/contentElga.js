@@ -1,7 +1,7 @@
 //var selectedMenu;
 var selection = ["", "", "", "", ""]; //각 단계별 최근 선택 사항(when, where, what, whog, whom)
 var WHEN, WHERE, WHAT, WHOG, WHOM;
-var default_group = "all";
+var default_group = "ALL";
 var PROCESS; //각 스텝들
 var content; //선택 정보들
 var currentStep;
@@ -96,7 +96,7 @@ function initializeSteps() {
             if(typeof (group) === 'undefined' || group === null) {
                 //'ALL'은 default element
                 APPDATA[WHOG.key] = [default_group];
-                dGroup.innerHTML += "<label class='style_whog' value='All' id='all' onclick='selectElement(" + WHOG.step + ","  + 0 + ")'>" + "ALL" + "</label>";
+                dGroup.innerHTML += "<label class='style_whog' value='ALL' id='all' onclick='selectElement(" + WHOG.step + ","  + 0 + ")'>" + "ALL" + "</label>";
             } else {
                 for(var index in group) {
                     this._makeElement(dGroup, index, group[index]);
@@ -142,7 +142,7 @@ function initializeSteps() {
                 dMember.innerHTML = "<label class='style_whom' onclick='writeContent()'>" + "SAVE" + "</label>";
             }
         },
-        step : 4
+        step : 5
     }
     PROCESS = [WHEN, WHERE, WHAT, WHOG, WHOM, SAVE];
 }
@@ -156,8 +156,8 @@ function showSteps() {
 function setTitle(event, element) {
     if(event.keyCode == 13) {
         var value = element.value;
-        content["Title"] = value;
-        console.log("[TITLE] : " + content["Title"]);
+        content["title"] = value;
+        console.log("[TITLE] : " + content["title"]);
         console.log("[DATE] : " + content[WHEN.key]);
         WHERE.makeInit();
     }
@@ -194,11 +194,9 @@ function closePlugBox() {
             key = obj.key;
             data = value;
         }
-        /*if(typeof(APPDATA[key]) === 'undefined' || APPDATA[key] === null) {
-                APPDATA[key] = [];
-        }*/
+
         _setCleanAndPush(APPDATA, key, data);
-        //APPDATA[key].push(data);
+
         obj.makeInit();
         writeAPPDATA();
         //TODO: close the box
@@ -235,24 +233,29 @@ function selectElement(step, index) {
     //set to content
     if(key === WHAT.key || key === WHOM.key) {
         if (key === WHAT.key) {
-            key = selection[step];
+            var menu = data[index]['menu'];
             var price = data[index]['price'];
-            var where = selection[WHERE.step];
-            content[where][key] = price;
-            if(!(content.hasOwnProperty(key))) {
-                content[key] = [];
-            }
+            var obj = {};
+            obj[menu] = price;
+            //var where = selection[WHERE.step];
+            // content[WHAT.key][key] = price;
+            // if(!(content.hasOwnProperty(key))) {
+            //     content[key] = [];
+            // }
+            _setCleanAndPush(content, WHAT.key, obj);
         } else {
             key = selection[WHAT.step];
-            data = content[key];
-            content[key].push(selection[step]);
+            // data??
+            //data = content[key];
+            _setCleanAndPush(content, key, selection[step]);
+            // content[key].push(selection[step]);
         }
     } else if(key === WHERE.key) {
-        key = selection[step];
-        //content[key] = selection[step];
-        if(!(content.hasOwnProperty(key))) {
+        //key = selection[step];
+        content[key] = selection[step];
+        /*if(!(content.hasOwnProperty(key))) {
                 content[key] = {};
-        }
+        }*/
     }
     console.log("selection : " + selection[step]);
     (PROCESS[step + 1]).makeInit();
@@ -290,11 +293,7 @@ function writeAPPDATA() {
 }
 
 function writeContent() {
-    console.log("=== WriteContent ===");
-    for(var index in content) {
-        // for(var index2 in content[index]) {
-        //     console.log(content[index][index2]);
-        // }
-        console.log(content[index]);
-    }
+    var title = content["title"] + "_" + content["when"] + "_" + content["where"];
+    console.log(title);
+    //createDataFile(title, content);
 }

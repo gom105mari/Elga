@@ -50,7 +50,7 @@ function handleAuthResult(authResult) {
 function showReceipt() {
     //1. Find receipt file
     //var query = ('"appfolder" in parents');
-    var query = ('"appfolder" in parents and title = "' + RECEIPT_JSON + '"');
+    var query = ('"appfolder" in parents and title != "' + APPDATA_JSON + '"');
     var success = function(result) {
         console.log("[SUCCESS] : Get Receipt");
     };
