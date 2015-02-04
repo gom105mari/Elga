@@ -10,7 +10,7 @@ var SCOPES=[
 var APPDATA = {};
 
 var RECEIPT_JSON = 'receipt.json';
-var APPDATA_JSON = 'data.json';
+
 //var APPDATA_META;
 var APPDATA_ID;
 
@@ -58,15 +58,15 @@ function showReceipt() {
     var error = function(count) {
         console.log("[ERROR] : Get Receipt(" + count + ")");
     };
-    getFileList(query, success, error);
+    findFilesWithQuery(query, success, error);
     //console.log("finding receipt result : " + result);
     //2. Read the data
     //var filechecking = getFile.bind(RECEIPT_JSON, result, null, null);
     //3. Load the data
 }
 
-function getFileList(query, success, error) {
-    console.log("[GET FILELIST] : " + query);
+function findFilesWithQuery(query, success, error) {
+    console.log("[FIND FILES] : " + query);
     executeWithDrive(function() {
         var listRequest = gapi.client.drive.files.list({
             'q': query
@@ -82,7 +82,7 @@ function getFileList(query, success, error) {
                     });
                     retrievePageOfFiles(request, result);
                 } else {
-                    checkFile(result, success, error);
+                    countFiles(result, success, error);
                 }
             });
         };
@@ -102,83 +102,42 @@ function getAppMetaData(callback) {
     });
 }*/
 
-function addNewReceipt() {
+function getDataFile(callback) {
     //1. Find APPDATA_JSON file
     var query = ('"appfolder" in parents and title = "' + APPDATA_JSON + '"');
+
+    //Read data file and make it to data model
     var success = function(result) {
-        console.log("[SUCCESS] : Get appdata");
         APPDATA_ID = result[0].id;
-        console.log("[APPDATA ID] : " + APPDATA_ID);
-        getFileData(result[0], function (response) {
-            APPDATA = {};
+        dataModel.id = result[0].id;
+        console.log("[SUCCESS] : get datafile(" + dataModel.id + ")");
+        readTextFromFile(result[0], function (response_json) {
+            //APPDATA = {};
             //deleteFile(result[0].id);
-            var _APPDATA = JSON.parse(response);
-            // if(typeof(_APPDATA) == undefined || _APPDATA == null) {
-            //     _APPDATA = {};
-            // }
-            for(var key in _APPDATA) {
-                var data = _APPDATA[key];
-                for(var index in data) {
-                    if(APPDATA[key] == null) {
-                        APPDATA[key] = [];
-                    }
-                    APPDATA[key].push(data[index]);
-                }
-            }
-            showSteps();
+            var response = JSON.parse(response_json);
+            dataModel.loadData(response);
+            callback();
         });
     };
 
+
+    //Make new data file if there is no one.
     var error = function(count) {
-        console.log("[ERROR] : Get appdata(" + count + ")");
-        var createAppData = function (id) {
-            var metadata = {
-                'title': APPDATA_JSON,
-                'mimeType': 'application/json',
-                'parents': [{
-                    'id': 'appfolder'
-                }]
-            };
-
-            var request = gapi.client.request({
-                'path': '/drive/v2/files',
-                'method': 'POST',
-                'params': {'uploadType': 'multipart'},
-                'body': JSON.stringify(metadata)
-            });
-
-            request.execute(function(file) {
-                console.log(file);
-                var empty = {};
-                _writeData(file.id, JSON.stringify(empty));
-                //showContent(WHEN.callback);
-            });
-        };
-        //getAppMetaData(createAppData);
-        createAppData();
+        console.log("[FAIL] : Get " + count + " datafile(s)");
+        var empty = {};
+        createFile(APPDATA_JSON, JSON.stringify(empty));
     };
-    getFileList(query, success, error);
+
+    findFilesWithQuery(query, success, error);
     //console.log("finding receipt result : " + result);
     //2. Read the data
     //var filechecking = getFile.bind(RECEIPT, result, null, null);
     //3. Load the data
 }
 
-function checkFile(result, success, error) {
+function countFiles(result, success, error) {
     var count = result.length;
-/*
-    var item;
-    for(var index in result) {
-        item = result[index];
-        if(typeof (item) != 'undefined') {
-            if(item.title == filename) {
 
-            isFind = true;
-            break;
-            }
-        }
-    }
-*/
     if(count == 1) {
         success(result);
     } else {
@@ -186,15 +145,15 @@ function checkFile(result, success, error) {
     }
 }
 
-function createDataFile(title, content) {
+function createFile(title, content) {
     var callback = function(file) {
         console.log('[READY] Write Data : ' + title + "(" + file.id + ")");
         _writeData(file.id, content);
     };
-    _createDataFile(title, callback);
+    _createFile(title, callback);
 };
 
-function _createDataFile(title, callback) {
+function _createFile(title, callback) {
     var metadata = {
         'title': title,
         'mimeType': 'application/json',
@@ -214,7 +173,7 @@ function _createDataFile(title, callback) {
 }
 
 
-function getFileData(file, callback) {
+function readTextFromFile(file, success) {
     var url;
     if (file.downloadUrl) {
         url = file.downloadUrl;
@@ -227,7 +186,7 @@ function getFileData(file, callback) {
     xhr.open('GET', url);
     xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
     xhr.onload = function() {
-        callback(xhr.responseText);
+        success(xhr.responseText);
     };
     xhr.onerror = function() {
     };
@@ -235,7 +194,6 @@ function getFileData(file, callback) {
 }
 
 function _writeData(fileId, data) {
-    console.log("[WRITE] Start: " + data);
     var request = gapi.client.drive.files.get({'fileId': fileId});
     request.execute(function(resp) {
         updateFile(fileId, resp, data, null);
@@ -274,7 +232,6 @@ function updateFile(fileId, fileMetadata, data,  callback) {
 
     if (!callback) {
         callback = function(file) {
-            console.log("[WRITE] End: " + file);
         };
     }
     request.execute(callback);
@@ -287,4 +244,8 @@ function deleteFile(fileId) {
     request.execute(function(resp) {
         console.log("Delete" + resp);
     });
+}
+
+function saveDataFile() {
+    alert(JSON.stringify(dataModel));
 }

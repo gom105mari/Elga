@@ -261,11 +261,11 @@ function selectElement(step, index) {
     (PROCESS[step + 1]).makeInit();
 }
 
-function showNewDiv() {
-    convertDiv(false);
+//function showNewDiv() {
+    //convertDiv(false);
     //executeWithDrive(getInfoFile);
-    addNewReceipt();
-}
+   // addNewReceipt();
+//}
 
 function convertDiv(showList) {
     var div_list = document.getElementById("div_list");

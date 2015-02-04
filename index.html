@@ -1,13 +1,33 @@
 <!DOCTYPE html>
 <html>
-    <!--https://elga-c9-gom105mari.c9.io/-->
-    <meta name="viewport" content="width=device-width; user-scalable=no" />
+    <!--https://elga-c9-gom105mari.c9.io/
+    http://stackoverflow.com/questions/17168082/dynamically-adding-elements-to-controlgroup-jquery-mobile-1-3
+    -->
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <title>Show me the Money</title>
-        <link rel="stylesheet" type="text/css" href="css/styleElga.css">
-        <script src="js/gapiElga.js" charset="utf-8"></script>
-        <script src="js/contentElga.js" charset="utf-8"></script>
-        <script src="js/messagesElga.js" charset="utf-8"></script>
+        <!--<link rel="stylesheet" type="text/css" href="css/styleElga.css">-->
+        <link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css" />
+
+        <script src="js/jquery-1.11.2.min.js" charset="utf-8"></script>
+        <script type="text/javascript">
+            $(document).bind("mobileinit", function() {
+                $.mobile.defaultPageTransition = "fade";
+                $.mobile.minScrollBack = 150;
+                $.mobile.activeBtnClass = "active-button";
+
+                $.mobile.page.prototype.options.addBackBtn = true;
+                //$( ".selector" ).dialog( "option", "closeBtnText", "Fermer" );
+            });
+        </script>
+        <script src="js/jquery.mobile-1.4.5.min.js" charset="utf-8"></script>
+        <!--https://github.com/arschmitz/jquery-mobile-nestedlists/-->
+        <script src="js/jquery.mobile.nestedlists.js" charset="utf-8"></script>
+        <script src="js/datamanager.js" charset="utf-8"></script>
+        <script src="js/uimanager.js" charset="utf-8"></script>
+        <script src="js/gapimanager.js" charset="utf-8"></script>
+        <script src="js/constants.js" charset="utf-8"></script>
+        <script src="js/model.js" charset="utf-8"></script>
         <script type="text/javascript">
             /**
         *
@@ -155,6 +175,151 @@
         <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
     </head>
     <body>
+
+        <div id="page_receipt_list" data-role="page" data-back-btn-text="back" data-transition="slide" data-fullscreen="true">
+            <div data-role="header" data-position="fixed">
+                <a href="edit_list">Edit</a>
+                <h1>Receipt List</h1>
+                <a href="javascript:readyNewReceipt()">New</a>
+            </div>
+            <div data-role="content">
+            </div>
+            <div data-role="footer" data-position="fixed">
+                <!--<a href="#page_new_list" data-transition="slide" data-role="button">Receipt List</a>
+                <a href="#page_new_receipt" data-transition="slide" data-role="button">New Receipt</a>-->
+            </div>
+        </div>
+
+        <div id="page_new_where" data-role="page" data-back-btn-text="back" data-transition="slide" data-fullscreen="true">
+            <div data-role="header" data-position="fixed">
+                <a href="#page_receipt_list">Cancel</a>
+                <h1>New Receipt</h1>
+                <a href="javascript:openPage('what')">Next</a>
+            </div>
+            <div data-role="content">
+                <div data-role="fieldcontain">
+                    <label for="input_when">When: </label>
+                    <input type="date" id="input_when">
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="input_where">Where: </label>
+                    <select id="input_where" data-iconpos="left">
+                    </select>
+                </div>
+                <a href="javascript:openNewDialog('where')" data-role="button">New Where</a>
+            </div>
+            <div data-role="footer" data-position="fixed">
+                <a href="mailto:gom105mari@gmail.com">Mail us</a>
+            </div>
+        </div>
+
+        <div id="page_new_what" data-role="page" data-back-btn-text="back" data-transition="slide" data-fullscreen="true">
+            <div data-role="header" data-position="fixed">
+                <a href="javascript:openPage('where')">Back</a>
+                <h1>New Receipt</h1>
+                <a href="javascript:openPage('who')">Next</a>
+            </div>
+            <div data-role="content" id="content_new_receipt">
+                <fieldset id="list_what" data-role="controlgroup">
+
+                </fieldset>
+                <a href="javascript:openNewDialog('what')" data-role="button">New What</a>
+            </div>
+            <div data-role="footer" data-position="fixed">
+                <a href="mailto:gom105mari@gmail.com">Mail us</a>
+            </div>
+        </div>
+
+        <div id="page_new_who" data-role="page" data-back-btn-text="back" data-transition="slide" data-fullscreen="true">
+            <div data-role="header" data-position="fixed">
+                <a href="#page_new_what">Back</a>
+                <h1>New Receipt</h1>
+                <a href="javascript:saveReceipt()">Done</a>
+            </div>
+            <div data-role="content" id="content_new_receipt">
+                <form>
+                    <div id="list_group" data-role="controlgroup" data-type="horizontal" data-iconpos="right">
+                    </div>
+                </form>
+                <a href="javascript:openNewDialog('group')" data-role="button">New Group</a>
+                <form>
+                    <div id="list_member" data-role="controlgroup">
+                    </div>
+                </form>
+                <a href="javascript:openNewDialog('member')" data-role="button">New Member</a>
+            </div>
+            <div data-role="footer" data-position="fixed">
+                <a href="mailto:gom105mari@gmail.com">Mail us</a>
+            </div>
+        </div>
+
+        <div id="dialog_new_where" data-role="page"  data-dialog="true" data-add-back-btn="true">
+            <div data-role="header">
+                <h1>New Where</h1>
+            </div>
+            <div data-role="content">
+                <div data-role="fieldcontain">
+                    <input type="text" id="input_new_where" placeholder="Add Where">
+                </div>
+                <button onclick="addElement('where')">Done</button>
+            </div>
+            <div data-role="footer" data-position="fixed">
+            </div>
+        </div>
+
+        <div id="dialog_new_what" data-role="page"  data-dialog="true" data-add-back-btn="true">
+            <div data-role="header">
+                <h1>New What</h1>
+            </div>
+            <div data-role="content">
+                <div data-role="fieldcontain">
+                    <input type="text" id="input_new_what" placeholder="Add Menu">
+                </div>
+                <div data-role="fieldcontain">
+                    <input type="number" id="input_new_what_price" placeholder="Add Price">
+                </div>
+                <button onclick="addElement('what')">Done</button>
+            </div>
+            <div data-role="footer" data-position="fixed">
+            </div>
+        </div>
+
+        <div id="dialog_new_group" data-role="page"  data-dialog="true" data-add-back-btn="true">
+            <div data-role="header">
+                <h1>New Group</h1>
+            </div>
+            <div data-role="content">
+                <div data-role="fieldcontain">
+                    <input type="text" id="input_new_group" placeholder="Add Group">
+                </div>
+                <form>
+                    <div id="members" data-role="controlgroup">
+                    </div>
+                </form>
+                <button onclick="addElement('who')">Done</button>
+            </div>
+            <div data-role="footer" data-position="fixed">
+            </div>
+        </div>
+
+        <div id="dialog_new_member" data-role="page"  data-dialog="true" data-add-back-btn="true">
+            <div data-role="header">
+                <h1>New Member</h1>
+            </div>
+            <div data-role="content">
+                <form>
+                    <div id="groups" data-role="controlgroup" data-type="horizontal">
+                    </div>
+                </form>
+                <div data-role="fieldcontain">
+                    <input type="text" id="input_new_member" placeholder="Add Member">
+                </div>
+                <button onclick="addElement('who')">Done</button>
+            </div>
+            <div data-role="footer" data-position="fixed">
+            </div>
+        </div>
+    <!--<body>
         <div id="nav">
             <input type="button" onclick="showListDiv()" value="List">
             <input type="button" onclick="showNewDiv()" value="New">
@@ -163,7 +328,7 @@
                 <div class="profile-content">
                 <div id="add-text"></div>
                     <input class="user-input" type="text" name="input" id="new-element" placeholder="" onkeypress="closePlugBox()"><span class="glyphicon glyphicon-ok">&nbsp;</span>
-                    <!--<button class="btn btn-large btn-success btn-block submit" ><span class="glyphicon glyphicon-ok">&nbsp;</span>OK</button>-->
+                    <button class="btn btn-large btn-success btn-block submit" ><span class="glyphicon glyphicon-ok">&nbsp;</span>OK</button>
         </div>
     </div>
         </div>
@@ -176,6 +341,6 @@
             <div id="div_whom" class="whom"></div>
             <div id="div_result"></div>
             <div id="div_buttons"></div>
-        </div>
+        </div>-->
     </body>
 </html>
