@@ -107,6 +107,9 @@ var dataModel = new function() {
         for(var i in dataModel[WHO]) {
             obj = dataModel[WHO][i];
             if(obj[GROUP] == group) {
+                if(typeof(obj[MEMBERS]) == "undefined") {
+                    obj[MEMBERS] = [];
+                }
                 obj[MEMBERS].push(member);
                 break;
             }

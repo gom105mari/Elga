@@ -1,8 +1,14 @@
 function makeDataFile() {
     var empty = {"who" : [{"group" : DEFAULT_GROUP}]};
-    createFile(DATAFILE, JSON.stringify(empty), function() {
+    var content = JSON.stringify(empty);
+    createFile(DATAFILE, content, function() {
         console.log("[SUCCESS] File created");
+        dataModel.loadData(content);
     });
+}
+
+function loadDataFile(content) {
+    dataModel.loadData(content);
 }
 
 function initDataFile(callback) {
@@ -218,11 +224,13 @@ function _setDataModel(step) {
             if(group != null && typeof(group) != "undefined") {
                 dataModel.addMember(group, member);
             }
-            dataModel.addMember(DEFAULT_GROUP, member);
+            if(group != DEFAULT_GROUP) {
+                dataModel.addMember(DEFAULT_GROUP, member);
+            }
         }
     }
 }
 
 function saveDataFile() {
-    createFile(DATAFILE, JSON.stringify(dataModel));
+    _writeData(dataModel.id, JSON.stringify(dataModel));
 }

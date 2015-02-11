@@ -86,11 +86,11 @@ function getReceiptList(callback) {
         };
 
         var count = 0;
-        var title, date;
+        var titlepieces, title;
         for(var i in result) {
             title = result[i].title;
-            date = (result[i].title.split("_"))[0];
-            if(title != DATAFILE && date.length == 8) {//yyyymmdd = 8 digits
+            titlepieces = result[i].title.split("_");
+            if(title != DATAFILE && titlepieces.length == 3 && titlepieces[0].length == 8) {//yyyymmdd = 8 digits
                 count++;
             }
         }
@@ -135,7 +135,7 @@ function getDataFile(callback) {
             readTextFromFile(result[0], function (response_json) {
                 var response = JSON.parse(response_json);
 //                deleteFile(result[0].id);
-                dataModel.loadData(response);
+                loadDataFile(response);
                 callback();
             });
         };
@@ -269,9 +269,9 @@ function updateFile(fileId, fileMetadata, data, callback) {
         },
         'body': multipartRequestBody});
 
-    if (callback) {
-        callback();
-    }
+//    if (callback) {
+//        callback();
+//    }
     request.execute(callback);
 }
 
