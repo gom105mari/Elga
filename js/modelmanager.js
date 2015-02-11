@@ -4,11 +4,16 @@ var dataModel = new function() {
     this.what = [];
     this.who = [];
     this.loadData =  function(response) {
-        var keys = Object.keys(this);
-        for(var key in response) {
-            for(var index in keys) {
-                if(keys[index] == key) {
-                    keys[index] = response[key];
+        console.log("[LOAD DATAMODEL] : " + JSON.stringify(response));
+        var dataKeys = ["id", "where", "what", "who"];
+        var keys = Object.keys(response);
+        var dataKey, key;
+        for(var i in dataKeys) {
+            dataKey = dataKeys[i];
+            for(var j in keys) {
+                key = keys[j];
+                if(dataKey == key) {
+                    this[key] = response[key];
                     break;
                 }
             }
@@ -58,7 +63,7 @@ var dataModel = new function() {
                 break;
             }
         }
-    }
+    };
 
     this.addWhere = function(where) {
         dataModel[WHERE].push(where);
@@ -67,7 +72,7 @@ var dataModel = new function() {
         obj[MENUS] = [];
         dataModel[WHAT].push(obj);
         saveDataFile();
-    }
+    };
 
     this.addWhat = function(where, name, price) {
         var obj;
@@ -83,7 +88,7 @@ var dataModel = new function() {
             }
         }
         saveDataFile();
-    }
+    };
 
     this.addGroup = function(group, members) {
         var obj = {};
@@ -95,7 +100,7 @@ var dataModel = new function() {
 
         dataModel[WHO].push(obj);
         saveDataFile();
-    }
+    };
 
     this.addMember = function(group, member) {
         var obj;
@@ -107,8 +112,8 @@ var dataModel = new function() {
             }
         }
         saveDataFile();
-    }
-}
+    };
+};
 
 // dataModel.prototype = {
 //     addWhere : function(where) {
@@ -156,27 +161,29 @@ var dataModel = new function() {
 //         saveDataFile();
 //     }
 // }
+var ReceiptModel = new function() {
 
-function Receipt() {
-    this.date;
-    this.place;
-    this.orders = []; //Menu + Members Array
-}
+    this.init = function() {
+        this.date = null;
+        this.place = null;
+        this.orders = []; //Menu + Members Array
+    };
 
-Receipt.prototype = {
-    setDate: function(date) {
+    this.init();
+
+    this.setDate = function(date) {
         if(date instanceof(Ymd)) {
             this.date = date;
         }
-    },
+    };
 
-    setPlace: function(place) {
+    this.setPlace = function(place) {
         if(place instanceof(Place)) {
             this.place = place;
         }
-    },
+    };
 
-    setMenus: function(menu, member) {
+    this.setMenus = function(menu, member) {
         var isExist = false;
         var _menu;
         var order;
@@ -206,9 +213,9 @@ Receipt.prototype = {
                 this.orders.push(item);
             }
         }
-    },
+    };
 
-    getMenu: function(name) {
+    this.getMenu = function(name) {
         var order, menu;
 
 
@@ -219,9 +226,9 @@ Receipt.prototype = {
             }
         }
         return menu;
-    },
+    };
 
-    getPrice: function(menu) {
+    this.getPrice = function(menu) {
         var order;
         var total = 0;
         if(menu instanceof(Menu)) {
@@ -233,9 +240,9 @@ Receipt.prototype = {
             }
         }
         return total;
-    },
+    };
 
-    getTotalPrice: function() {
+    this.getTotalPrice = function() {
         var order, price, members;
         var total = 0;
         for(var i in this.orders) {
@@ -245,11 +252,11 @@ Receipt.prototype = {
             total += (price * members.length);
         }
         return total;
-    },
+    };
 
-    getPlaceName: function() {
+    this.getPlaceName = function() {
         return this.place.getPlaceName();
-    }
+    };
 };
 
 function Ymd() {
@@ -259,13 +266,14 @@ function Ymd() {
 }
 
 Ymd.prototype = {
-    setDate: function(date) {
+    setDate : function(date) {
         var str = date.split("-");
         this.year = str[0];
         this.month = str[1];
         this.day = str[2];
     },
-    getDate: function() {
+
+    getDate : function() {
         return this.year + this.month + this.day;
     }
 }
@@ -277,7 +285,7 @@ function Place() {
 }
 
 Place.prototype = {
-    getPlaceName: function() {
+    getPlaceName : function() {
         return this.name;
     }
 }

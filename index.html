@@ -23,11 +23,12 @@
         <script src="js/jquery.mobile-1.4.5.min.js" charset="utf-8"></script>
         <!--https://github.com/arschmitz/jquery-mobile-nestedlists/-->
         <script src="js/jquery.mobile.nestedlists.js" charset="utf-8"></script>
+        <script src="js/receiptmanager.js" charset="utf-8"></script>
         <script src="js/datamanager.js" charset="utf-8"></script>
         <script src="js/uimanager.js" charset="utf-8"></script>
         <script src="js/gapimanager.js" charset="utf-8"></script>
         <script src="js/constants.js" charset="utf-8"></script>
-        <script src="js/model.js" charset="utf-8"></script>
+        <script src="js/modelmanager.js" charset="utf-8"></script>
         <script type="text/javascript">
             /**
         *
@@ -172,9 +173,18 @@
 
             }
         </script>
-        <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+        <script src="https://apis.google.com/js/client.js?onload=intiGAPIManager"></script>
     </head>
     <body>
+        <div id="page_init" data-role="page" data-back-btn-text="back" data-transition="slide" data-fullscreen="true">
+            <div data-role="header" data-position="fixed">
+            </div>
+            <div data-role="content">
+                Now Loading..
+            </div>
+            <div data-role="footer" data-position="fixed">
+            </div>
+        </div>
 
         <div id="page_receipt_list" data-role="page" data-back-btn-text="back" data-transition="slide" data-fullscreen="true">
             <div data-role="header" data-position="fixed">
@@ -234,7 +244,7 @@
             <div data-role="header" data-position="fixed">
                 <a href="#page_new_what">Back</a>
                 <h1>New Receipt</h1>
-                <a href="javascript:saveReceipt()">Done</a>
+                <a href="javascript:addReceiptDone()">Done</a>
             </div>
             <div data-role="content" id="content_new_receipt">
                 <form>

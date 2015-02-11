@@ -1,3 +1,101 @@
+function makeDataFile() {
+    var empty = {"who" : [{"group" : DEFAULT_GROUP}]};
+    createFile(DATAFILE, JSON.stringify(empty), function() {
+        console.log("[SUCCESS] File created");
+    });
+}
+
+function initDataFile(callback) {
+    getDataFile(callback);
+    //TODO: remove test data
+//    dataModel["where"] = ["a", "b", "c", "d"];
+//    dataModel["what"] = [
+//        {
+//            "place" : "a",
+//            "menus" : [
+//                {
+//                    "name" : "akim",
+//                    "price" : 5000
+//                },
+//                {
+//                    "name" : "ayam",
+//                    "price" : 5500
+//                },
+//                {
+//                    "name": "achgg",
+//                    "price" : 3000
+//                }
+//            ]
+//        },
+//        {
+//            "place" : "b",
+//            "menus" : [
+//                {
+//                    "name" : "bkim",
+//                    "price" : 7000
+//                },
+//                {
+//                    "name" : "byam",
+//                    "price" : 4500
+//                },
+//                {
+//                    "name": "bchgg",
+//                    "price" : 1000
+//                }
+//            ]
+//        },
+//        {
+//            "place" : "c",
+//            "menus" : [
+//                {
+//                    "name" : "ckim",
+//                    "price" : 25000
+//                },
+//                {
+//                    "name" : "cyam",
+//                    "price" : 15500
+//                },
+//                {
+//                    "name": "cchgg",
+//                    "price" : 13000
+//                }
+//            ]
+//        },
+//        {
+//            "place" : "d",
+//            "menus" : [
+//                {
+//                    "name" : "dkim",
+//                    "price" : 2000
+//                },
+//                {
+//                    "name" : "dyam",
+//                    "price" : 3500
+//                },
+//                {
+//                    "name": "dchgg",
+//                    "price" : 4000
+//                }
+//            ]
+//        }
+//    ];
+//
+//    dataModel["who"] = [
+//        {
+//            "group" : "All",
+//            "members" : ["손태영", "김건", "이창현", "박윤기", "변영택", "강석길", "안효철"]
+//        },
+//        {
+//            "group" : "IDE",
+//            "members" : ["손태영", "김건", "이창현", "박윤기"]
+//        },
+//        {
+//            "group" : "CoreUnited",
+//            "members" : ["변영택", "강석길", "안효철"]
+//        }
+//    ];
+}
+
 function leaveWherePage() {
     var date = new Ymd();
     date.setDate($("#input_when").val());
@@ -5,8 +103,8 @@ function leaveWherePage() {
     var place = new Place();
     place.name = $("#input_where option:selected").val();
 
-    receipt.setDate(date);
-    receipt.setPlace(place);
+    ReceiptModel.setDate(date);
+    ReceiptModel.setPlace(place);
 }
 
 function leaveWhatPage() {
@@ -16,7 +114,7 @@ function leaveWhatPage() {
     var place,key, menus;
     for(var i in dataModel["what"]) {
         key = dataModel["what"][i][PLACE];
-        place = receipt.getPlaceName();
+        place = ReceiptModel.getPlaceName();
         if(key == place) {
             menus = dataModel["what"][i][MENUS];
             for(var j in menus) {
@@ -27,22 +125,20 @@ function leaveWhatPage() {
             }
         }
     }
-    receipt.setMenus(menu);
+    ReceiptModel.setMenus(menu);
 }
 
 function leaveWhoPage() {
     var name = $("#list_what input:checked").val();
     var members = $("#list_member input:checked");
-    var menu = receipt.getMenu(name);
+    var menu = ReceiptModel.getMenu(name);
     var member;
 
     $("#list_member input:checked").each(function() {
         member = new Member();
         member.name = $(this).val();
-        receipt.setMenus(menu, member);
+        ReceiptModel.setMenus(menu, member);
     });
-    console.log(receipt.getTotalPrice());
-    alert(JSON.stringify(receipt));
 }
 
 function addElement(step) {
@@ -125,4 +221,8 @@ function _setDataModel(step) {
             dataModel.addMember(DEFAULT_GROUP, member);
         }
     }
+}
+
+function saveDataFile() {
+    createFile(DATAFILE, JSON.stringify(dataModel));
 }

@@ -9,6 +9,7 @@ $(document).on("pagecreate", "#page_new_who", initWhoPage);
 
 //페이지 열때마다
 //back버튼으로 페이지 이동시에는 초기화 안해야 함;;
+$(document).on("pagebeforeshow", "#page_receipt_list", makeMainPage);
 $(document).on("pagebeforeshow", "#page_new_where", makeWherePage);
 $(document).on("pagebeforeshow", "#page_new_what", makeWhatPage);
 $(document).on("pagebeforeshow", "#page_new_who", makeWhoPage);
@@ -21,110 +22,25 @@ $(document).on("pagebeforehide", "#page_new_where", leaveWherePage);
 $(document).on("pagebeforehide", "#page_new_what", leaveWhatPage);
 $(document).on("pagebeforehide", "#page_new_who", leaveWhoPage);
 
-var receipt;
+function initMainPage() {
+    var openMainPage = function() {
+        $.mobile.changePage($("#page_receipt_list"));
+    };
 
+    getReceiptList(openMainPage);
+}
+
+
+//when click the "New"
 function readyNewReceipt() {
     //load data from APPDATA_JSON
-    loadDataFile();
-    receipt = new Receipt();
+    clearReceipt();
     //page convert
-    $.mobile.changePage($("#page_new_where"));
-    //newReceiptData.clean();
-}
+    var openWherePage = function() {
+        $.mobile.changePage($("#page_new_where"));
+    };
 
-function loadDataFile() {
-    getDataFile(loadComplete);
-    //TODO: remove test data
-    dataModel["where"] = ["a", "b", "c", "d"];
-    dataModel["what"] = [
-        {
-            "place" : "a",
-            "menus" : [
-                {
-                    "name" : "akim",
-                    "price" : 5000
-                },
-                {
-                    "name" : "ayam",
-                    "price" : 5500
-                },
-                {
-                    "name": "achgg",
-                    "price" : 3000
-                }
-             ]
-        },
-        {
-            "place" : "b",
-            "menus" : [
-                {
-                    "name" : "bkim",
-                    "price" : 7000
-                },
-                {
-                    "name" : "byam",
-                    "price" : 4500
-                },
-                {
-                    "name": "bchgg",
-                    "price" : 1000
-                }
-             ]
-        },
-        {
-            "place" : "c",
-            "menus" : [
-                {
-                    "name" : "ckim",
-                    "price" : 25000
-                },
-                {
-                    "name" : "cyam",
-                    "price" : 15500
-                },
-                {
-                    "name": "cchgg",
-                    "price" : 13000
-                }
-             ]
-        },
-        {
-            "place" : "d",
-            "menus" : [
-                {
-                    "name" : "dkim",
-                    "price" : 2000
-                },
-                {
-                    "name" : "dyam",
-                    "price" : 3500
-                },
-                {
-                    "name": "dchgg",
-                    "price" : 4000
-                }
-             ]
-        }
-    ];
-
-    dataModel["who"] = [
-        {
-            "group" : "All",
-            "members" : ["손태영", "김건", "이창현", "박윤기", "변영택", "강석길", "안효철"]
-        },
-        {
-            "group" : "IDE",
-            "members" : ["손태영", "김건", "이창현", "박윤기"]
-        },
-        {
-            "group" : "CoreUnited",
-            "members" : ["변영택", "강석길", "안효철"]
-        }
-    ];
-}
-
-function loadComplete() {
-    //로딩완료 안내
+    initDataFile(openWherePage);
 }
 
 //초기화 필요한 것들
@@ -169,6 +85,10 @@ function initWhoPage() {
         //     $(this).closest("div").find("input").removeAttr("selected");
         // }
     });
+}
+
+function makeMainPage() {
+
 }
 
 function makeWherePage(needEmpty) {
@@ -357,10 +277,10 @@ function openNewDialog(step) {
 //     var members = $("#members");
 // }
 
-function saveReceipt() {
-    $.mobile.changePage($("#page_receipt_list"));
-}
-
 function _makeEntryId(step, index) {
     return step + "_entry_" + index;
+}
+
+function addReceiptDone() {
+    saveReceipt(initMainPage);
 }

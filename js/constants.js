@@ -1,5 +1,6 @@
 //data file for where; what; whog; whom
-var APPDATA_JSON = 'data.json';
+var DATAFILE = 'data.json';
+var RECEIPT_JSON = 'receipt.json';
 
 var ORDER = "price";
 var PLACE = "place";
